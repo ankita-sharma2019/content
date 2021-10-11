@@ -1,0 +1,22 @@
+{
+    "name": "Armorblox",
+    "description": "Armorblox secures enterprise communications over email and other cloud office applications with the power of Natural Language Understanding. The Armorblox platform connects over APIs and analyzes thousands of signals to understand the context of communications and protect people and data from compromise.",
+    "support": "partner",
+    "currentVersion": "1.0.0",
+    "author": "Armorblox",
+    "url": "",
+    "email": "",
+    "categories": [
+        "Utilities"
+    ],
+    "tags": [
+        "armorblox",
+        "email",
+        "security"
+    ],
+    "useCases": [],
+    "keywords": [],
+    "githubUser": [
+        "ankita.sharma@xoriant.com"
+    ]
+}
