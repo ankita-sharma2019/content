@@ -1,0 +1,17 @@
+{
+    "defaultIncidentType": "Armorblox",
+    "description": "Classifies Armorblox  Incidents.",
+    "feed": false,
+    "id": "e8ded555-9409-4d33-842c-45d29b6ab31c",
+    "keyTypeMap": {
+        "Armorblox": "Armorblox"
+    },
+    "name": "Armorblox - Classifier",
+    "transformer": {
+        "complex": null,
+        "simple": "name"
+    },
+    "type": "classification",
+    "version": -1,
+    "fromVersion": "6.0.0"
+}

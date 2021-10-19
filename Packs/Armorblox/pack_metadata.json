@@ -1,18 +1,17 @@
 {
     "name": "Armorblox",
-    "description": "Armorblox secures enterprise communications over email and other cloud office applications with the power of Natural Language Understanding. The Armorblox platform connects over APIs and analyzes thousands of signals to understand the context of communications and protect people and data from compromise.",
+    "description": "Armorblox secures enterprise communications over email and other cloud office applications with the power of NLU.",
     "support": "partner",
     "currentVersion": "1.0.0",
     "author": "Armorblox",
-    "url": "",
+    "url": "https://www.armorblox.com/",
     "email": "",
     "categories": [
-        "Utilities"
+        "Email Gateway"
     ],
     "tags": [
-        "armorblox",
-        "email",
-        "security"
+        "Alerts", "Attack", "Breach", "Compliance", "Email", "Forensics", "GDPR","HIPAA","Incident Response","IT","Machine Learning","Malware","PII","Scam","Security","Security Analytics","Spam","Threat Intelligence"
+
     ],
     "useCases": [],
     "keywords": [],

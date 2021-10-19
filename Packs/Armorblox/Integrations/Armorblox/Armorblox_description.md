@@ -1,7 +1,9 @@
-## BaseIntegration Help
+## Armorblox
 
-Markdown file for integration configuration  help snippet. In this file add:
-- Brief information about how to retrieve the API key of your product
-- Other useful information on how to configure your integration in XSOAR
 
-Since this is a Markdown file, we encourage you to use MD formatting for sections, sub-sections, lists, etc.
+To configure an instance of Armorblox integration in Cortex XSOAR:
+- Provide 'TENANT NAME'
+    Copy the tenant name from your Armorblox URL (www.TENANTNAME.armorblox.com).
+- Provide 'API Key'
+    Create an API Key in Armorblox. Navigate to `SETTINGS --> API KEYs` and click on `+CREATE API KEY` to generate a new API key. Specify a
+    descriptive name (e.g. Cortex) and click `CREATE`. The key will be displayed once in a popup window and must be copied and saved in a secure location. CREATE API Keys should never be shared with anyone other than internal Armorblox admins. The API key must be included with each GET request

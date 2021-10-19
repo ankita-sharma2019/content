@@ -1,158 +1,131 @@
-"""Base Integration for Cortex XSOAR (aka Demisto)
-
-This is an empty Integration with some basic structure according
-to the code conventions.
-
-MAKE SURE YOU REVIEW/REPLACE ALL THE COMMENTS MARKED AS "TODO"
-
-Developer Documentation: https://xsoar.pan.dev/docs/welcome
-Code Conventions: https://xsoar.pan.dev/docs/integrations/code-conventions
-Linting: https://xsoar.pan.dev/docs/integrations/linting
-
-This is an empty structure file. Check an example at;
-https://github.com/demisto/content/blob/master/Packs/HelloWorld/Integrations/HelloWorld/HelloWorld.py
-
-"""
-
-import traceback
-from typing import Any, Optional, Dict
-
-import demistomock as demisto
-import urllib3
-from CommonServerPython import *  # noqa # pylint: disable=unused-wildcard-import
-from CommonServerUserPython import *  # noqa
-
-# Disable insecure warnings
-urllib3.disable_warnings()
-
-''' CONSTANTS '''
-
-DATE_FORMAT = '%Y-%m-%dT%H:%M:%SZ'  # ISO8601 format with UTC, default in XSOAR
-
-''' CLIENT CLASS '''
+import demistomock as demisto  # noqa: F401
+from CommonServerPython import *  # noqa: F401
+import dateparser
+import requests
+import json
+from datetime import datetime, timedelta
 
 
-class Client(BaseClient):
-    """Client class to interact with the service API
+# disable insecure warnings
+requests.packages.urllib3.disable_warnings()
 
-    This Client implements API calls, and does not contain any XSOAR logic.
-    Should only do requests and return data.
-    It inherits from BaseClient defined in CommonServer Python.
-    Most calls use _http_request() that handles proxy, SSL verification, etc.
-    For this  implementation, no special attributes defined
-    """
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+MAX_INCIDENTS_TO_FETCH = 50
 
-    # TODO: REMOVE the following dummy function:
-    def baseintegration_dummy(self, dummy: str, dummy2: Optional[int]) -> Dict[str, str]:
-        """Returns a simple python dict with the information provided
-        in the input (dummy).
+TENANT_NAME = demisto.params().get('tenantName')
+INSECURE = demisto.params().get('insecure')
+PROXY = demisto.params().get('proxy')
+API_KEY = demisto.params().get('apikey')
+BASE_URL = f"https://{TENANT_NAME}.armorblox.io/api/v1beta1/organizations/{TENANT_NAME}/incidents"
 
-        Args:
-            dummy: string to add in the dummy dict that is returned. This is a required argument.
-            dummy2: int to limit the number of results. This is an optional argument.
-
-        Returns:
-            The dict with the arguments
-        """
-        return {'dummy': dummy, 'dummy2': dummy2}
-    # TODO: ADD HERE THE FUNCTIONS TO INTERACT WITH YOUR PRODUCT API
+payload = {}
+headers = {
+    'x-ab-authorization': API_KEY
+}
+# contains all the incident severity types
+# IncidentSeverity = {
+#     'LOW' : 1,
+#     'MEDIUM' : 2,
+#     'HIGH' : 3
+# }
 
 
-''' HELPER FUNCTIONS '''
+def get_incident_message_ids(incident_id):
+    incident_details_url = "{}/{}".format(BASE_URL, incident_id)
+    detail_response = requests.request("GET", incident_details_url, headers=headers, data=payload).json()
+    message_ids = []
+    # loop through all the events of this incident
+    if 'events' in detail_response.keys():
+        for event in detail_response['events']:
+            message_ids.append(event['message_id'])
 
-# TODO: ADD HERE ANY HELPER FUNCTION YOU MIGHT NEED (if any)
-
-''' COMMAND FUNCTIONS '''
-
-
-def test_module(client: Client) -> str:
-    """Tests API connectivity and authentication'
-
-    Returning 'ok' indicates that the integration works like it is supposed to.
-    Connection to the service is successful.
-    Raises:
-     exceptions if something goes wrong.
-
-    Args:
-        Client: client to use
-
-    Returns:
-        'ok' if test passed, anything else will fail the test.
-    """
-
-    # TODO: ADD HERE some code to test connectivity and authentication to your service.
-    # This  should validate all the inputs given in the integration configuration panel,
-    # either manually or by using an API that uses them.
-    client.baseintegration_dummy('dummy', 10)  # No errors, the api is working
-    return 'ok'
+    if 'abuse_events' in detail_response.keys():
+        for event in detail_response['abuse_events']:
+            message_ids.append(event['message_id'])
+    return message_ids
 
 
-# TODO: REMOVE the following dummy command function
-def baseintegration_dummy_command(client: Client, args: Dict[str, Any]) -> CommandResults:
-    dummy = args.get('dummy')  # dummy is a required argument, no default
-    dummy2 = args.get('dummy2')  # dummy2 is not a required argument
+def get_incidents():
+    # incident_list_url = f"https://{opt_tenant_name}.armorblox.io/api/v1beta1/organizations/{opt_tenant_name}/incidents"
 
-    # Call the Client function and get the raw response
-    result = client.baseintegration_dummy(dummy, dummy2)
+    response = requests.request("GET", BASE_URL+"?&orderBy=ASC", headers=headers, data=payload)
 
+    r_json = response.json()
+
+    r_status = response.status_code
+    if r_status != 200:
+        # check the response status, if the status is not sucessful, raise requests.HTTPError
+        response.raise_for_status()
+
+    results = []
+    if 'incidents' in r_json.keys():
+        results = response.json()['incidents']
+
+    # For each incident, get the details and extract the message_id
+    for result in results:
+        result['message_ids'] = get_incident_message_ids(result["id"])
+    return results
+
+
+def get_armorblox_incidents_command():
+    results = get_incidents()
+    for incident in results:
+        occured_time = incident['date']
+        demisto.results('The user : ' + incident['users'] + 'has reported an alert as of ' + occured_time)
+
+
+def fetch_incidents_command():
+
+    # demisto.debug("Incidents: "+str(len(results)))
+
+    last_run = demisto.getLastRun()
+    if last_run and 'start_time' in last_run.keys():
+        start_time = dateparser.parse(last_run.get('start_time'))
+    else:
+        now = datetime.now()
+        start_time = now - timedelta(days=1)
+        start_time = dateparser.parse(start_time.strftime(DATE_FORMAT))
+    start_time = start_time.timestamp()
+    demisto.debug(str(start_time))
+    data = get_incidents()
+    last_time = start_time
+    inc = []
+    for res in data:
+        # demisto.debug(res)
+        res['name'] = "Armorblox"
+        dt = res['date']
+        dt = dateparser.parse(dt).timestamp()
+        if dt > start_time:
+
+            # , 'details': json.dumps(res), 'severity': IncidentSeverity[res.get('priority')], 'CustomFields': {'details' : res}}
+            temp = {'name': "Armorblox", 'rawJSON': json.dumps(res), 'details': json.dumps(res), 'CustomFields': {'details': res}}
+            last_time = dt
+            inc.append(temp)
+
+        demisto.debug(str(last_time))
+    demisto.setLastRun({'start_time': str(last_time)})
+    demisto.incidents(inc)
+    readable_output = f'## {inc}'
     return CommandResults(
-        outputs_prefix='BaseIntegration',
+        readable_output=readable_output,
+        outputs_prefix='Armorblox',
         outputs_key_field='',
-        outputs=result,
+        outputs=inc
     )
 
 
-# TODO: ADD additional command functions that translate XSOAR inputs/outputs to Client
-
-
-def main():
-    """main function, parses params and runs command functions"""
-
-    # TODO: make sure you properly handle authentication
-    # api_key = params.get('apikey')
-
-    params = demisto.params()
-    # get the service API url
-    base_url = urljoin(params.get('url'), '/api/v1')
-
-    # if your Client class inherits from BaseClient, SSL verification is
-    # handled out of the box by it, just pass ``verify_certificate`` to
-    # the Client constructor
-    verify_certificate = not argToBoolean(params('insecure', False))
-
-    # if your Client class inherits from BaseClient, system proxy is handled
-    # out of the box by it, just pass ``proxy`` to the Client constructor
-    proxy = argToBoolean(params.get('proxy', False))
-
-    command = demisto.command()
-    demisto.debug(f'Command being called is {command}')
-    try:
-
-        # TODO: Make sure you add the proper headers for authentication
-        # (i.e. "Authorization": {api key})
-        headers = {}
-
-        client = Client(
-            base_url=base_url,
-            verify=verify_certificate,
-            headers=headers,
-            proxy=proxy
-        )
-        args = demisto.args()
-        if command == 'test-module':
-            # This is the call made when pressing the integration Test button.
-            result = test_module(client)
-        # TODO: REMOVE the following dummy command case:
-        elif command == 'baseintegration-dummy':
-            result = baseintegration_dummy_command(client, args)
-        else:
-            raise NotImplementedError(f'Command {command} is not implemented')
-        return_results(result)  # Returns either str, CommandResults and a list of CommandResults
-    # Log exceptions and return errors
-    except Exception as e:
-        demisto.error(traceback.format_exc())  # print the traceback
-        return_error(f'Failed to execute {command} command.\nError:\n{str(e)}')
-
-
-if __name__ in ('__main__', '__builtin__', 'builtins'):  # pragma: no cover
-    main()
+''' EXECUTION '''
+LOG('command is %s' % (demisto.command(), ))
+try:
+    if demisto.command() == 'armorblox':
+        get_armorblox_incidents_command()
+    elif demisto.command() == "fetch-incidents":
+        a = fetch_incidents_command()
+        return_results(a)
+        demisto.results("Incidents fetched")
+    elif demisto.command() == 'test-module':
+        fetch_incidents_command()
+        demisto.results("OK")
+except Exception as e:
+    demisto.debug('Error!')
+    return_error(e)
