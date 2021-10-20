@@ -18,7 +18,7 @@ PROXY = demisto.params().get('proxy')
 API_KEY = demisto.params().get('apikey')
 BASE_URL = f"https://{TENANT_NAME}.armorblox.io/api/v1beta1/organizations/{TENANT_NAME}/incidents"
 
-payload = {}
+payload: Dict = {}
 headers = {
     'x-ab-authorization': API_KEY
 }
@@ -48,7 +48,7 @@ def get_incident_message_ids(incident_id):
 def get_incidents():
     # incident_list_url = f"https://{opt_tenant_name}.armorblox.io/api/v1beta1/organizations/{opt_tenant_name}/incidents"
 
-    response = requests.request("GET", BASE_URL+"?&orderBy=ASC", headers=headers, data=payload)
+    response = requests.request("GET", BASE_URL + "?&orderBy=ASC", headers=headers, data=payload)
 
     r_json = response.json()
 
