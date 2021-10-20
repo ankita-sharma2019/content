@@ -1,6 +1,6 @@
 {
     "name": "Armorblox",
-    "description": "Armorblox secures enterprise communications over email and other cloud office applications with the power of NLU.",
+    "description": "Armorblox is an API-based platform that stops targeted email attacks, protects sensitive data, and automates incident response.",
     "support": "partner",
     "currentVersion": "1.0.0",
     "author": "Armorblox",
@@ -13,7 +13,7 @@
         "Alerts", "Attack", "Breach", "Compliance", "Email", "Forensics", "GDPR","HIPAA","Incident Response","IT","Machine Learning","Malware","PII","Scam","Security","Security Analytics","Spam","Threat Intelligence"
 
     ],
-    "useCases": [],
+    "useCases": ["Email Communication"],
     "keywords": [],
     "githubUser": [
         "ankita.sharma@xoriant.com"
