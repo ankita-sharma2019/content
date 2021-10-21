@@ -106,7 +106,8 @@ def fetch_incidents_command():
 def test_module():
     # Run a sample request to retrieve mock data
     response = requests.request("GET", BASE_URL + "?&pageSize=1", headers=headers, data=payload)
-    demisto.results("ok")
+    if response.ok is True:
+        demisto.results("ok")
 
 
 def main():
