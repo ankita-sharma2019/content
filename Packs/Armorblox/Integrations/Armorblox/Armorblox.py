@@ -1,3 +1,5 @@
+import demistomock as demisto  # noqa: F401
+from CommonServerPython import *  # noqa: F401
 import dateparser
 import requests
 import json
@@ -7,7 +9,7 @@ from datetime import datetime, timedelta
 requests.packages.urllib3.disable_warnings()
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
-MAX_INCIDENTS_TO_FETCH = 50
+MAX_INCIDENTS_TO_FETCH = demisto.params().get('max_fetch')
 
 TENANT_NAME = demisto.params().get('tenantName')
 INSECURE = demisto.params().get('insecure')
@@ -36,7 +38,7 @@ class Client(BaseClient):
 
         request_params['orderBy'] = orderBy
         if pageSize:
-            request_params['pageSize'] = 1
+            request_params['pageSize'] = pageSize
         return self._http_request(
             method='GET',
             url_suffix='/incidents',
@@ -79,7 +81,7 @@ def get_incidents_list(client):
     """
     Hits the Armorblox API and returns the list of fetched incidents.
     """
-    response = client.get_incidents()
+    response = client.get_incidents(pageSize=MAX_INCIDENTS_TO_FETCH)
     results = []
     if 'incidents' in response.keys():
         results = response['incidents']
