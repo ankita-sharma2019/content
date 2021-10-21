@@ -1,37 +1,101 @@
-import demistomock as demisto
-from CommonServerPython import *
-from CommonServerUserPython import *
 import dateparser
 import requests
 import json
 from datetime import datetime, timedelta
 
-
 # disable insecure warnings
 requests.packages.urllib3.disable_warnings()
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
-# MAX_INCIDENTS_TO_FETCH = 50
+MAX_INCIDENTS_TO_FETCH = 50
 
 TENANT_NAME = demisto.params().get('tenantName')
 INSECURE = demisto.params().get('insecure')
 PROXY = demisto.params().get('proxy')
 API_KEY = demisto.params().get('apikey')
-
-BASE_URL = f"https://{TENANT_NAME}.armorblox.io/api/v1beta1/organizations/{TENANT_NAME}/incidents"
+verify_certificate = not demisto.params().get('insecure', False)
+proxy = demisto.params().get('proxy', False)
+BASE_URL = f"https://{TENANT_NAME}.armorblox.io/api/v1beta1/organizations/{TENANT_NAME}"
 
 payload: Dict = {}
 headers = {
-    'x-ab-authorization': API_KEY
+    'x-ab-authorization': f'{API_KEY}'
 }
 
 
-def get_incident_message_ids(incident_id):
+class Client(BaseClient):
+    """Client class to interact with the service API
+    This Client implements API calls, and does not contain any Demisto logic.
+    Should only do requests and return data.
+    It inherits from BaseClient defined in CommonServer Python.
+    Most calls use _http_request() that handles proxy, SSL verification, etc.
+    """
+
+    def get_incidents(self, orderBy="ASC", pageSize=None) -> List[Dict[str, Any]]:
+        request_params: Dict[str, Any] = {}
+
+        request_params['orderBy'] = orderBy
+        if pageSize:
+            request_params['pageSize'] = 1
+        return self._http_request(
+            method='GET',
+            url_suffix='/incidents',
+            params=request_params
+        )
+
+    def get_incident_details(self, incident_id):
+        request_params: Dict[str, Any] = {}
+        return self._http_request(
+            method='GET',
+            url_suffix='/incidents/{}'.format(incident_id),
+            params=request_params
+        )
+
+
+def test_module(client: Client) -> str:
+    """Tests API connectivity and authentication'
+    Returning 'ok' indicates that the integration works like it is supposed to.
+    Connection to the service is successful.
+    Raises exceptions if something goes wrong.
+    :type client: ``Client``
+    :param Client: Armorblox client to use
+    :type name: ``str``
+    :return: 'ok' if test passed, anything else will fail the test.
+    :rtype: ``str``
+    """
+
+    try:
+        client.get_incidents(pageSize=1)
+
+    except DemistoException as e:
+        if 'Forbidden' in str(e):
+            return 'Authorization Error: make sure API Key is correctly set'
+        else:
+            raise e
+    return 'ok'
+
+
+def get_incidents_list(client):
+    """
+    Hits the Armorblox API and returns the list of fetched incidents.
+    """
+    response = client.get_incidents()
+    results = []
+    if 'incidents' in response.keys():
+        results = response['incidents']
+
+    # For each incident, get the details and extract the message_id
+    for result in results:
+        result['message_ids'] = get_incident_message_ids(client, result["id"])
+    return results
+
+
+def get_incident_message_ids(client, incident_id):
     """
     Returns the message ids for all the events for the input incident.
     """
-    incident_details_url = "{}/{}".format(BASE_URL, incident_id)
-    detail_response = requests.request("GET", incident_details_url, headers=headers, data=payload).json()
+
+    detail_response = client.get_incident_details(incident_id)
     message_ids = []
     # loop through all the events of this incident and collect the message ids
     if 'events' in detail_response.keys():
@@ -44,30 +108,7 @@ def get_incident_message_ids(incident_id):
     return message_ids
 
 
-def get_incidents():
-    """
-    Hits the Armorblox API and returns the list of fetched incidents.
-    """
-    response = requests.request("GET", BASE_URL + "?&orderBy=ASC", headers=headers, data=payload)
-
-    r_json = response.json()
-
-    r_status = response.status_code
-    if r_status != 200:
-        # check the response status, if the status is not sucessful, raise requests.HTTPError
-        response.raise_for_status()
-
-    results = []
-    if 'incidents' in r_json.keys():
-        results = response.json()['incidents']
-
-    # For each incident, get the details and extract the message_id
-    for result in results:
-        result['message_ids'] = get_incident_message_ids(result["id"])
-    return results
-
-
-def fetch_incidents_command():
+def fetch_incidents_command(client):
 
     last_run = demisto.getLastRun()
     if last_run and 'start_time' in last_run.keys():
@@ -78,7 +119,7 @@ def fetch_incidents_command():
         start_time = dateparser.parse(start_time.strftime(DATE_FORMAT))
     start_time = start_time.timestamp()
     demisto.debug(str(start_time))
-    incidents_data = get_incidents()
+    incidents_data = get_incidents_list(client)
     last_time = start_time
     incidents = []
     for incident in incidents_data:
@@ -103,22 +144,23 @@ def fetch_incidents_command():
     )
 
 
-def test_module():
-    # Run a sample request to retrieve mock data
-    response = requests.request("GET", BASE_URL + "?&pageSize=1", headers=headers, data=payload)
-    if response.ok is True:
-        demisto.results("ok")
-
-
 def main():
     ''' EXECUTION '''
     LOG('command is %s' % (demisto.command(), ))
     try:
+
+        client = Client(
+            base_url=BASE_URL,
+            verify=verify_certificate,
+            headers=headers,
+            proxy=proxy)
+
         if demisto.command() == "fetch-incidents":
-            return_results(fetch_incidents_command())
+            return_results(fetch_incidents_command(client))
 
         elif demisto.command() == 'test-module':
-            test_module()
+            result = test_module(client)
+            return_results(result)
     except Exception as e:
         return_error(str(e))
 
