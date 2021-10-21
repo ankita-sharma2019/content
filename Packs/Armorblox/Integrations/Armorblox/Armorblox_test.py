@@ -48,3 +48,8 @@ def test_get_incident_message_ids():
     result = get_incident_message_ids('3785')
 
     assert result == ["CAGEoyMdivjNP14oyLChhPmqgYaX-hTFTVwGEh2aGmT8BMekZMQ@mail.gmail.com"]
+
+
+def test_response_status():
+    detail_response = requests.request("GET", BASE_URL, headers=headers, data=payload)
+    assert detail_response.ok is True
