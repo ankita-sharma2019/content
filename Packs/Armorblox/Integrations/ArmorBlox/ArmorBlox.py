@@ -6,7 +6,7 @@ from CommonServerUserPython import *
 import dateparser
 import requests
 import json
-from datetime import datetime, timedelta
+
 
 # disable insecure warnings
 requests.packages.urllib3.disable_warnings()
@@ -128,7 +128,7 @@ def get_incident_message_ids(client, incident_id):
 
 def fetch_incidents_command(client):
     last_run = demisto.getLastRun()
-    start_time = ""
+    start_time: Any
     # pageToken fetched from demisto lastRun
     pageToken = int()
     response = {}
@@ -142,7 +142,7 @@ def fetch_incidents_command(client):
             curr_incident = {'rawJSON': json.dumps(response['incidents'][0]), 'details': json.dumps(response['incidents'][0])}
             incidents.append(curr_incident)
 
-    if last_run and 'pageToken' in  last_run.keys():
+    if last_run and 'pageToken' in last_run.keys():
         pageToken = last_run.get('pageToken')
 
     if last_run and 'start_time' in last_run.keys():
