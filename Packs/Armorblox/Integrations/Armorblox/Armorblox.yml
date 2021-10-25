@@ -46,8 +46,8 @@ configuration:
   - last2Years
   - allTime
   required: false
-  type: 16
-- defaultvalue: '5'
+  type: 15
+- defaultvalue: '50'
   name: max_fetch
   required: false
   type: 0
