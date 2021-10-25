@@ -1,5 +1,8 @@
-import demistomock as demisto  # noqa: F401
-from CommonServerPython import *  # noqa: F401
+import demistomock as demisto
+from CommonServerPython import *
+from CommonServerUserPython import *
+# noqa: F401
+# noqa: F401
 import dateparser
 import requests
 import json
@@ -10,7 +13,7 @@ requests.packages.urllib3.disable_warnings()
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 MAX_INCIDENTS_TO_FETCH = demisto.params().get('max_fetch')
-
+FIRST_FETCH = demisto.params().get('first_fetch')[0]
 TENANT_NAME = demisto.params().get('tenantName')
 INSECURE = demisto.params().get('insecure')
 PROXY = demisto.params().get('proxy')
@@ -33,10 +36,15 @@ class Client(BaseClient):
     Most calls use _http_request() that handles proxy, SSL verification, etc.
     """
 
-    def get_incidents(self, orderBy="ASC", pageSize=None) -> List[Dict[str, Any]]:
+    def get_incidents(self, orderBy="ASC", pageSize=None, pageToken=None, first_fetch=None) -> List[Dict[str, Any]]:
         request_params: Dict[str, Any] = {}
 
         request_params['orderBy'] = orderBy
+        if pageToken == -1 and first_fetch:
+            request_params['timeFilter'] = first_fetch
+        elif pageToken and first_fetch:
+            request_params['timeFilter'] = first_fetch
+            request_params['pageToken'] = pageToken
         if pageSize:
             request_params['pageSize'] = pageSize
         return self._http_request(
@@ -77,11 +85,19 @@ def test_module(client: Client) -> str:
     return 'ok'
 
 
-def get_incidents_list(client):
+def get_page_token(client, pageToken=None):
+    response = client.get_incidents(pageSize=MAX_INCIDENTS_TO_FETCH, pageToken=pageToken, first_fetch=FIRST_FETCH)
+    if 'next_page_token' in response.keys():
+        return response['next_page_token']
+    else:
+        return None
+
+
+def get_incidents_list(client, pageToken, first_fetch):
     """
     Hits the Armorblox API and returns the list of fetched incidents.
     """
-    response = client.get_incidents(pageSize=MAX_INCIDENTS_TO_FETCH)
+    response = client.get_incidents(pageSize=MAX_INCIDENTS_TO_FETCH, pageToken=pageToken, first_fetch=FIRST_FETCH)
     results = []
     if 'incidents' in response.keys():
         results = response['incidents']
@@ -111,19 +127,36 @@ def get_incident_message_ids(client, incident_id):
 
 
 def fetch_incidents_command(client):
-
     last_run = demisto.getLastRun()
+    start_time = ""
+    # pageToken fetched from demisto lastRun
+    pageToken = int()
+    response = {}
+    incidents = []
+    if (not last_run) is True:
+        pageToken = -1
+        response = client.get_incidents(pageSize=1, pageToken=pageToken, first_fetch=FIRST_FETCH)
+        if 'incidents' in response.keys():
+            start_time = response['incidents'][0]['date']
+            start_time = dateparser.parse(start_time)
+            curr_incident = {'rawJSON': json.dumps(response['incidents'][0]), 'details': json.dumps(response['incidents'][0])}
+            incidents.append(curr_incident)
+
+    if last_run and 'pageToken' in  last_run.keys():
+        pageToken = last_run.get('pageToken')
+
     if last_run and 'start_time' in last_run.keys():
         start_time = dateparser.parse(last_run.get('start_time'))
-    else:
-        now = datetime.now()
-        start_time = now - timedelta(days=1)
-        start_time = dateparser.parse(start_time.strftime(DATE_FORMAT))
+
     start_time = start_time.timestamp()
     demisto.debug(str(start_time))
-    incidents_data = get_incidents_list(client)
+    demisto.debug(str(pageToken))
+    demisto.debug(str(FIRST_FETCH))
+    incidents_data = get_incidents_list(client, pageToken=pageToken, first_fetch=FIRST_FETCH)
+    pageToken = get_page_token(client, pageToken=pageToken)
+    demisto.debug(demisto.getLastRun())
     last_time = start_time
-    incidents = []
+    demisto.debug(str(len(incidents)))
     for incident in incidents_data:
         dt = incident['date']
         dt = dateparser.parse(dt).timestamp()
@@ -133,9 +166,9 @@ def fetch_incidents_command(client):
             curr_incident = {'rawJSON': json.dumps(incident), 'details': json.dumps(incident)}
             last_time = dt
             incidents.append(curr_incident)
-
+    demisto.debug(str(len(incidents)))
     # Save the next_run as a dict with the start_time key to be stored
-    demisto.setLastRun({'start_time': str(last_time)})
+    demisto.setLastRun({'start_time': str(last_time), 'pageToken': pageToken})
     demisto.incidents(incidents)
     readable_output = f'## {incidents}'
     return CommandResults(
@@ -161,8 +194,13 @@ def main():
             return_results(fetch_incidents_command(client))
 
         elif demisto.command() == 'test-module':
-            result = test_module(client)
-            return_results(result)
+            demisto.debug(demisto.getLastRun())
+            fetch_incidents_command(client)
+            demisto.debug(demisto.getLastRun())
+            fetch_incidents_command(client)
+            demisto.debug(demisto.getLastRun())
+            # result = test_module(client)
+            # return_results(result)
     except Exception as e:
         return_error(str(e))
 
