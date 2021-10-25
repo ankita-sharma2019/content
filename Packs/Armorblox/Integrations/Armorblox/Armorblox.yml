@@ -58,20 +58,17 @@ display: Armorblox
 name: 67c81960-d3b3-4d0b-8189-6fd8ca78e8be
 script:
   commands:
-  - deprecated: false
+  - arguments: []
     description: Gets a list of armorblox incidents
-    execution: false
     name: fetch-incidents
   dockerimage: demisto/python3:3.9.7.24076
-  feed: false
+  isFetchSamples: true
   isfetch: true
-  longRunning: false
-  longRunningPort: false
   runonce: false
-  script: '-'
+  script: ''
   subtype: python3
   type: python
-
 fromversion: 6.0.0
+
 tests:
 - No tests (auto formatted)
