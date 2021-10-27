@@ -5,7 +5,8 @@
     "currentVersion": "1.0.0",
     "author": "Armorblox",
     "url": "https://www.armorblox.com/",
-    "email": "",
+    "email": "support@armorblox.com",
+    "devEmail": "app-publishers@armorblox.com",
     "categories": [
         "Email Gateway"
     ],

@@ -13,7 +13,7 @@ requests.packages.urllib3.disable_warnings()
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 MAX_INCIDENTS_TO_FETCH = demisto.params().get('max_fetch')
-FIRST_FETCH = demisto.params().get('first_fetch')[0]
+FIRST_FETCH = demisto.params().get('first_fetch')
 TENANT_NAME = demisto.params().get('tenantName')
 INSECURE = demisto.params().get('insecure')
 PROXY = demisto.params().get('proxy')
@@ -170,7 +170,7 @@ def fetch_incidents_command(client):
     # Save the next_run as a dict with the start_time key to be stored
     demisto.setLastRun({'start_time': str(last_time), 'pageToken': pageToken})
     demisto.incidents(incidents)
-    readable_output = f'## {incidents}'
+    readable_output = f'## {len(incidents)}'
     return CommandResults(
         readable_output=readable_output,
         outputs_prefix='Armorblox',
@@ -194,13 +194,8 @@ def main():
             return_results(fetch_incidents_command(client))
 
         elif demisto.command() == 'test-module':
-            demisto.debug(demisto.getLastRun())
-            fetch_incidents_command(client)
-            demisto.debug(demisto.getLastRun())
-            fetch_incidents_command(client)
-            demisto.debug(demisto.getLastRun())
-            # result = test_module(client)
-            # return_results(result)
+            result = test_module(client)
+            return_results(result)
     except Exception as e:
         return_error(str(e))
 
