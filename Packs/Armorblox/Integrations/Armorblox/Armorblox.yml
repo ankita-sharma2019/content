@@ -14,27 +14,15 @@ configuration:
   name: incidentType
   required: false
   type: 13
-- display: Trust any certificate (not secure)
-  name: insecure
-  required: false
-  type: 8
-- display: Use system proxy settings
-  name: proxy
-  required: false
-  type: 8
 - display: API key
   name: apikey
   required: true
   type: 4
-- defaultvalue: '1'
-  display: Incidents Fetch Interval
-  name: incidentFetchInterval
+- defaultvalue: '50'
+  display: Fetch limit
+  name: max_fetch
   required: false
   type: 0
-- display: Fetch Incidents
-  name: isFetch
-  required: false
-  type: 8
 - defaultvalue: lastDay
   display: First fetch timestamp (last <number> <time unit>, e.g., last7Days)
   name: first_fetch
@@ -50,16 +38,28 @@ configuration:
   - allTime
   required: false
   type: 15
-- defaultvalue: '50'
-  display: Fetch limit
-  name: max_fetch
+- display: Trust any certificate (not secure)
+  name: insecure
+  required: false
+  type: 8
+- display: Use system proxy settings
+  name: proxy
+  required: false
+  type: 8
+- defaultvalue: '1'
+  display: Incidents Fetch Interval
+  name: incidentFetchInterval
   required: false
   type: 0
+- display: Fetch incidents
+  name: isFetch
+  required: false
+  type: 8
 description: |-
   Armorblox is an API-based platform that stops targeted email attacks,
     protects sensitive data, and automates incident response.
 display: Armorblox
-name: 67c81960-d3b3-4d0b-8189-6fd8ca78e8be
+name: Armorblox
 script:
   commands:
   - deprecated: false
@@ -73,7 +73,7 @@ script:
   longRunning: false
   longRunningPort: false
   runonce: false
-  script: '-'
+  script: ''
   subtype: python3
   type: python
 tests:
