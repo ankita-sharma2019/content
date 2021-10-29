@@ -149,14 +149,10 @@ def fetch_incidents_command(client):
         start_time = dateparser.parse(last_run.get('start_time'))
 
     start_time = start_time.timestamp()
-    demisto.debug(str(start_time))
-    demisto.debug(str(pageToken))
-    demisto.debug(str(FIRST_FETCH))
     incidents_data = get_incidents_list(client, pageToken=pageToken, first_fetch=FIRST_FETCH)
     pageToken = get_page_token(client, pageToken=pageToken)
-    demisto.debug(demisto.getLastRun())
     last_time = start_time
-    demisto.debug(str(len(incidents)))
+
     for incident in incidents_data:
         dt = incident['date']
         dt = dateparser.parse(dt).timestamp()
@@ -170,13 +166,13 @@ def fetch_incidents_command(client):
     # Save the next_run as a dict with the start_time key to be stored
     demisto.setLastRun({'start_time': str(last_time), 'pageToken': pageToken})
     demisto.incidents(incidents)
-    readable_output = f'## {len(incidents)}'
-    return CommandResults(
-        readable_output=readable_output,
-        outputs_prefix='Armorblox',
-        outputs_key_field='',
-        outputs=incidents
-    )
+    # readable_output = f'## {len(incidents)}'
+    # return CommandResults(
+    #     readable_output=readable_output,
+    #     outputs_prefix='Armorblox',
+    #     outputs_key_field='',
+    #     outputs=incidents
+    # )
 
 
 def main():
@@ -191,7 +187,9 @@ def main():
             proxy=proxy)
 
         if demisto.command() == "fetch-incidents":
-            return_results(fetch_incidents_command(client))
+            fetch_incidents_command(client)
+            return_results("Incidents fetched successfully!!")
+            # return_results(fetch_incidents_command(client))
 
         elif demisto.command() == 'test-module':
             result = test_module(client)
