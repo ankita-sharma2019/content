@@ -7,6 +7,9 @@ This integration was integrated and tested with version 1.0 of Armorblox
 1. Navigate to **Settings** > **Integrations** > **Servers & Services**.
 2. Search for Armorblox.
 3. Click **Add instance** to create and configure a new integration instance.
+4. Select **Fetches incidents** to pull incidents from Armorblox to Cortex
+5. Select Classifier as Armorblox-Classifier
+6. Select Mapper as Armorblox-Mapper
 
     | **Parameter** | **Required** |
     | --- | --- |
@@ -18,9 +21,6 @@ This integration was integrated and tested with version 1.0 of Armorblox
     | Incidents Fetch Interval | False |
     | Fetch incidents | False |
     | First fetch timestamp (&lt;number&gt; &lt;time unit&gt;, e.g., 12 hours, 7 days) | False |
-    | None | False |
 
-4. Click **Test** to validate the URLs, token, and connection.
-5. Select **Fetches incidents** to pull incidents from Armorblox to Cortex
-6. Select Classifier as Armorblox-Classifier
-7. Select Mapper as Armorblox-Mapper
+7. Click **Test** to validate the URLs, token, and connection.
+8. Save and Exit to enable the instance.
