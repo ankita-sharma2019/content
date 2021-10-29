@@ -33,20 +33,29 @@
                     },
                     "simple": ""
                 },
-                "Armorblox Title": {
+                "Armorblox Remediation Actions": {
                     "complex": {
                         "accessor": "",
                         "filters": [],
-                        "root": "title",
+                        "root": "remediation_actions",
                         "transformers": []
                     },
                     "simple": ""
                 },
-                "State": {
+                "Armorblox Resolution State": {
                     "complex": {
                         "accessor": "",
                         "filters": [],
                         "root": "resolution_state",
+                        "transformers": []
+                    },
+                    "simple": ""
+                },
+                "Armorblox Subject": {
+                    "complex": {
+                        "accessor": "",
+                        "filters": [],
+                        "root": "title",
                         "transformers": []
                     },
                     "simple": ""
@@ -56,15 +65,6 @@
                         "accessor": "details.folder_categories.[0]",
                         "filters": [],
                         "root": "CustomFields",
-                        "transformers": []
-                    },
-                    "simple": ""
-                },
-                "name": {
-                    "complex": {
-                        "accessor": "",
-                        "filters": [],
-                        "root": "name",
                         "transformers": []
                     },
                     "simple": ""
@@ -144,7 +144,25 @@
                     },
                     "simple": ""
                 },
-                "Armorblox Title": {
+                "Armorblox Remediation Actions": {
+                    "complex": {
+                        "accessor": "",
+                        "filters": [],
+                        "root": "remediation_actions",
+                        "transformers": []
+                    },
+                    "simple": ""
+                },
+                "Armorblox Resolution State": {
+                    "complex": {
+                        "accessor": "",
+                        "filters": [],
+                        "root": "resolution_state",
+                        "transformers": []
+                    },
+                    "simple": ""
+                },
+                "Armorblox Subject": {
                     "complex": {
                         "accessor": "",
                         "filters": [],
@@ -176,7 +194,25 @@
                     },
                     "simple": ""
                 },
-                "Armorblox Title": {
+                "Armorblox Remediation Actions": {
+                    "complex": {
+                        "accessor": "",
+                        "filters": [],
+                        "root": "remediation_actions",
+                        "transformers": []
+                    },
+                    "simple": ""
+                },
+                "Armorblox Resolution State": {
+                    "complex": {
+                        "accessor": "",
+                        "filters": [],
+                        "root": "resolution_state",
+                        "transformers": []
+                    },
+                    "simple": ""
+                },
+                "Armorblox Subject": {
                     "complex": {
                         "accessor": "",
                         "filters": [],
@@ -208,7 +244,25 @@
                     },
                     "simple": ""
                 },
-                "Armorblox Title": {
+                "Armorblox Remediation Actions": {
+                    "complex": {
+                        "accessor": "",
+                        "filters": [],
+                        "root": "remediation_actions",
+                        "transformers": []
+                    },
+                    "simple": ""
+                },
+                "Armorblox Resolution State": {
+                    "complex": {
+                        "accessor": "",
+                        "filters": [],
+                        "root": "resolution_state",
+                        "transformers": []
+                    },
+                    "simple": ""
+                },
+                "Armorblox Subject": {
                     "complex": {
                         "accessor": "",
                         "filters": [],
@@ -234,15 +288,6 @@
                 "Armorblox Incident Id": {
                     "complex": null,
                     "simple": "CustomFields.details.id"
-                },
-                "State": {
-                    "complex": {
-                        "accessor": "",
-                        "filters": [],
-                        "root": "resolution_state",
-                        "transformers": []
-                    },
-                    "simple": ""
                 },
                 "category": {
                     "complex": {
