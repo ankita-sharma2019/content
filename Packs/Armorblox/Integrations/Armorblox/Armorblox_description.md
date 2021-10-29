@@ -2,6 +2,7 @@
 
 
 To configure an instance of Armorblox integration in Cortex XSOAR:
+
 - Provide 'TENANT NAME'
     Copy the tenant name from your Armorblox URL (www.TENANTNAME.armorblox.com).
 - Provide 'API Key'
