@@ -1,0 +1,25 @@
+args:
+- description: The email id where the incident details have to be sent
+  name: user_email
+  required: true
+- description: Action to be taken against this incident id
+  name: incident_id
+- description: Field to check if the remediation action is Needs Review/Alert
+  name: remediation_action
+  required: true
+commonfields:
+  id: 206e6b95-78af-4ee0-8ef3-ff6fda5268e3
+  version: -1
+dockerimage: demisto/python3:3.9.7.24076
+enabled: true
+engineinfo: {}
+name: ArmorBloxSendEmail
+pswd: ""
+runas: DBotWeakRole
+runonce: false
+script: ''
+scripttarget: 0
+subtype: python3
+tags:
+- email
+type: python

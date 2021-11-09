@@ -1,0 +1,121 @@
+id: 6f8d9151-e05d-46a5-8660-015ed71d1e9f
+inputs:
+- description: ""
+  key: email
+  playbookInputQuery: null
+  required: false
+  value:
+    simple: ankita353535@gmail.com
+name: Armorblox_SeverityAlerts
+outputs:
+- contextPath: Armorblox.Threat.remediation_actions
+  type: string
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "1"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: c3429eb6-03e6-44ee-87ff-aad9b325b2ee
+      iscommand: false
+      name: ""
+      version: -1
+    taskid: c3429eb6-03e6-44ee-87ff-aad9b325b2ee
+    timertriggers: []
+    type: start
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+  "1":
+    id: "1"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#none#':
+      - "2"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      incident_id:
+        simple: ${incident.armorbloxincidentid}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: Armorblox
+      description: 'Check the recommended remediation action for any incident '
+      id: a8de223a-3ef5-4840-8650-ed87d2e6f28e
+      iscommand: true
+      name: check-remediation-action
+      script: Armorblox|||check-remediation-action
+      type: regular
+      version: -1
+    taskid: a8de223a-3ef5-4840-8650-ed87d2e6f28e
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 230
+        }
+      }
+  "2":
+    id: "2"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      incident_id:
+        simple: ${incident.armorbloxincidentid}
+      user_email:
+        simple: ${inputs.email}
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: d3832a70-d44a-49bd-8f24-04c7824dfdfa
+      iscommand: false
+      name: ArmorBloxSendEmail
+      script: 206e6b95-78af-4ee0-8ef3-ff6fda5268e3
+      type: regular
+      version: -1
+    taskid: d3832a70-d44a-49bd-8f24-04c7824dfdfa
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 460
+        }
+      }
+version: -1
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 505,
+        "width": 380,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
