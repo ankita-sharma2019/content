@@ -55,6 +55,7 @@ def send_email_command(args: Dict[str, Any]) -> CommandResults:
 
     email = args.get('user_email', None)
     incident_id = args.get('incident_id', None)
+    remediation_action = args.get('remediation_action', None)
     if not incident_id:
         raise ValueError('Incident Id not specified')
 
@@ -62,7 +63,7 @@ def send_email_command(args: Dict[str, Any]) -> CommandResults:
         raise ValueError('Email not specified')
 
     # Call the standalone function and get the raw response
-    result = send_email(email, incident_id)
+    result = send_email(email, incident_id, remediation_action)
     markdown = f'## {result}'
     outputs = {
         'Armorblox': {

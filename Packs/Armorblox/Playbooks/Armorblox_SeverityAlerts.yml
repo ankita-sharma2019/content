@@ -2,14 +2,15 @@ id: 6f8d9151-e05d-46a5-8660-015ed71d1e9f
 inputs:
 - description: ""
   key: email
-  playbookInputQuery: null
+  playbookInputQuery:
   required: false
   value:
-    simple: ankita353535@gmail.com
+    simple: gangulyprateek01@gmail.com
 name: Armorblox_SeverityAlerts
 outputs:
 - contextPath: Armorblox.Threat.remediation_actions
   type: string
+quiet: true
 starttaskid: "0"
 tasks:
   "0":
@@ -47,7 +48,7 @@ tasks:
     isoversize: false
     nexttasks:
       '#none#':
-      - "2"
+      - "3"
     note: false
     quietmode: 0
     scriptarguments:
@@ -84,26 +85,101 @@ tasks:
     scriptarguments:
       incident_id:
         simple: ${incident.armorbloxincidentid}
+      remediation_action:
+        simple: ${Armorblox.Threat.remediation_actions}
       user_email:
         simple: ${inputs.email}
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
-      id: d3832a70-d44a-49bd-8f24-04c7824dfdfa
+      id: a7b2a733-0006-4783-83d8-eda70fb6f3af
       iscommand: false
       name: ArmorBloxSendEmail
       script: 206e6b95-78af-4ee0-8ef3-ff6fda5268e3
       type: regular
       version: -1
-    taskid: d3832a70-d44a-49bd-8f24-04c7824dfdfa
+    taskid: a7b2a733-0006-4783-83d8-eda70fb6f3af
     timertriggers: []
     type: regular
     view: |-
       {
         "position": {
-          "x": 50,
-          "y": 460
+          "x": 440,
+          "y": 810
+        }
+      }
+  "3":
+    conditions:
+    - condition:
+      - - left:
+            iscontext: true
+            value:
+              simple: Armorblox.Threat.remediation_actions
+          operator: isEqualString
+          right:
+            value:
+              simple: NEEDS REVIEW
+      label: "YES"
+    id: "3"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    nexttasks:
+      '#default#':
+      - "4"
+      "YES":
+      - "2"
+    note: false
+    quietmode: 0
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      id: 02744b9b-9d33-4575-8d66-2b1736e204df
+      iscommand: false
+      name: IfReviewNeeded
+      type: condition
+      version: -1
+    taskid: 02744b9b-9d33-4575-8d66-2b1736e204df
+    timertriggers: []
+    type: condition
+    view: |-
+      {
+        "position": {
+          "x": 100,
+          "y": 490
+        }
+      }
+  "4":
+    id: "4"
+    ignoreworker: false
+    isautoswitchedtoquietmode: false
+    isoversize: false
+    note: false
+    quietmode: 0
+    scriptarguments:
+      value:
+        simple: Review Not Needed
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Prints text to war room (Markdown supported)
+      id: c9153a29-ee1e-48b2-8158-f27bd69d433c
+      iscommand: false
+      name: Done
+      script: Print
+      type: regular
+      version: -1
+    taskid: c9153a29-ee1e-48b2-8158-f27bd69d433c
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": -160,
+          "y": 810
         }
       }
 version: -1
@@ -112,9 +188,9 @@ view: |-
     "linkLabelsPosition": {},
     "paper": {
       "dimensions": {
-        "height": 505,
-        "width": 380,
-        "x": 50,
+        "height": 855,
+        "width": 980,
+        "x": -160,
         "y": 50
       }
     }
