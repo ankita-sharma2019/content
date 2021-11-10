@@ -1,12 +1,10 @@
 import demistomock as demisto  # noqa: F401
 from CommonServerPython import *  # noqa: F401
-"""Base Script for Cortex XSOAR (aka Demisto)
-This is an empty script with some basic structure according
-to the code conventions.
-MAKE SURE YOU REVIEW/REPLACE ALL THE COMMENTS MARKED AS "TODO"
-Developer Documentation: https://xsoar.pan.dev/docs/welcome
-Code Conventions: https://xsoar.pan.dev/docs/integrations/code-conventions
-Linting: https://xsoar.pan.dev/docs/integrations/linting
+# import demistomock as demisto  # noqa: F401
+# from CommonServerPython import *  # noqa: F401
+"""This is a n automation script for sending an email whenever a particular incident is encountered.
+This incident is identified by it's remediation action. If the remediation action is ALERT or NEEDS REVIEW,an email
+is automatically sent to the desired admin email/group.
 """
 
 from typing import Dict, Any
@@ -17,43 +15,37 @@ import smtplib
 
 
 # TODO: REMOVE the following dummy function:
-def send_email(email: str, incident_id: str, remediation_action: str) -> Dict[str, str]:
-    """Returns a simple python dict with the information provided
-    in the input (dummy).
-    :type dummy: ``str``
-    :param dummy: string to add in the dummy dict that is returned
-    :return: dict as {"dummy": dummy}
-    :rtype: ``str``
+def send_email(email: str, incident_id: str, remediation_action: str) -> str:
+    """Returns a string acknowledging the status of email sending procedure.
+    :param email: email id of the recipient
+    :param incident_id: The incident under the investigation, whose remediation action is being checked
+    :param remediation_action: The remediation action of the incident under inspection.
+
     """
     if remediation_action:
-        port = 465
-        smtp_server = 'smtp.gmail.com'
-        sender_email = 'test.armorblox@gmail.com'
-        password = 'Armorb123@'
+        port = demisto.args().get('smtp_port')  # 465
+        smtp_server = demisto.args().get('smtp_server')  # 'smtp.gmail.com'
+        sender_email = demisto.args().get('sender_mail_address')  # 'test.armorblox@gmail.com'
+        password = demisto.args().get('sender_mail_password')  # 'Armorb123@'
         receiver_email = email
         subject = 'Remediation Action '
         body = f'The incident id: {incident_id} NEEDS REVIEW.'
         message = 'Subject: {}\n\n{}'.format(subject, body)
         with smtplib.SMTP_SSL(smtp_server, port) as server:
-            # server.ehlo()  # Can be omitted
-            # server.starttls(context=context)
-            # server.ehlo()  # Can be omitted
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, message)
 
         return f"Email Sent to {email}"
     else:
         return "Does not require to be reviewed"
-# TODO: ADD HERE THE FUNCTIONS TO INTERACT WITH YOUR PRODUCT API
 
 
 ''' COMMAND FUNCTION '''
 
 
-# TODO: REMOVE the following dummy command function
 def send_email_command(args: Dict[str, Any]) -> CommandResults:
 
-    email = args.get('user_email', None)
+    email = args.get('recipient_mail_address', None)
     incident_id = args.get('incident_id', None)
     remediation_action = args.get('remediation_action', None)
     if not incident_id:

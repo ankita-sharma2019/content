@@ -137,7 +137,7 @@ def get_remediation_action(client, incident_id):
     """
 
     detail_response = client.get_incident_details(incident_id)
-    remediation_actions = ""
+    remediation_actions = None
     if 'remediation_actions' in detail_response.keys():
         remediation_actions = detail_response['remediation_actions'][0]
         if ('NEEDS REVIEW' in detail_response['remediation_actions']) or ('ALERT' in detail_response['remediation_actions']):
@@ -228,7 +228,7 @@ def main():
             fetch_incidents_command(client)
             return_results("Incidents fetched successfully!!")
             # return_results(fetch_incidents_command(client))
-        if demisto.command() == "check-remediation-action":
+        if demisto.command() == "armorblox-check-remediation-action":
             incident_id = demisto.args().get('incident_id')
             get_remediation_action(client, incident_id)
 
