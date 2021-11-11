@@ -2,34 +2,34 @@ description: This playbook sends email alerts to admins for Armorblox incidents 
   need review.
 id: Armorblox Needs Review
 inputs:
-- description: The receiver's mail list.
+- description: "Receiver's mailing address."
   key: recipient_mail_address
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: gangulyprateek01@gmail.com
-- description: ""
+    simple: xyz@gmail.com
+- description: "Sender's mailing address"
   key: sender_mail_address
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: test.armorblox@gmail.com
-- description: ""
+    simple: test@gmail.com
+- description: "Sender's password"
   key: sender_mail_password
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: Armorb123@
-- description: ""
+    simple: ABCDEF@123
+- description: "The SMTP server for the sender's email"
   key: smtp_server
   playbookInputQuery:
-  required: false
+  required: true
   value:
     simple: smtp.gmail.com
-- description: ""
+- description: "SMTP server port."
   key: smtp_port
   playbookInputQuery:
-  required: false
+  required: true
   value:
     simple: "465"
 name: Armorblox Needs Review
