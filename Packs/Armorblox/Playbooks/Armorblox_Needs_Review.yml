@@ -2,39 +2,40 @@ description: This playbook sends email alerts to admins for Armorblox incidents 
   need review.
 id: Armorblox Needs Review
 inputs:
-- description: The receiver's mail list.
+- description: "Receiver's mailing address."
   key: recipient_mail_address
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: gangulyprateek01@gmail.com
-- description: ""
+    simple: xyz@gmail.com
+- description: "Sender's mailing address"
   key: sender_mail_address
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: test.armorblox@gmail.com
-- description: ""
+    simple: test@gmail.com
+- description: "Sender's password"
   key: sender_mail_password
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: Armorb123@
-- description: ""
+    simple: ABCDEF@123
+- description: "The SMTP server for the sender's email"
   key: smtp_server
   playbookInputQuery:
-  required: false
+  required: true
   value:
     simple: smtp.gmail.com
-- description: ""
+- description: "SMTP server port."
   key: smtp_port
   playbookInputQuery:
-  required: false
+  required: true
   value:
     simple: "465"
 name: Armorblox Needs Review
 outputs:
 - contextPath: Armorblox.Threat.remediation_actions
+  description: Remediation Action for the incident under inspection.
   type: string
 starttaskid: "0"
 tasks:
@@ -56,6 +57,7 @@ tasks:
       iscommand: false
       name: ""
       version: -1
+      description: ''
     taskid: c13b9f45-a269-4f5f-82d4-5337018ff132
     timertriggers: []
     type: start
@@ -126,6 +128,7 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
+      description: ''
       id: 12e58627-3bc4-437f-81df-79b78a0d6cb6
       iscommand: false
       name: ArmorBloxSendEmail
@@ -170,6 +173,7 @@ tasks:
     task:
       brand: ""
       id: 454d402c-45a4-4487-8731-108f6b18b377
+      description: ''
       iscommand: false
       name: IfReviewNeeded
       type: condition
@@ -228,3 +232,6 @@ view: |-
       }
     }
   }
+tests:
+- No tests (auto formatted)
+fromversion: 6.0.0
