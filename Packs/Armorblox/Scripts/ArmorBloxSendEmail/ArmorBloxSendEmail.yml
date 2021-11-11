@@ -23,7 +23,7 @@ args:
   name: smtp_port
   required: true
   secret: true
-comment: Armorblox Send Email Script
+comment: Armorblox Send Email
 commonfields:
   id: ArmorBloxSendEmail
   version: -1

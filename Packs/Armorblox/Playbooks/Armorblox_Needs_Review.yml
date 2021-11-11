@@ -7,7 +7,7 @@ inputs:
   playbookInputQuery:
   required: false
   value:
-    simple: ankita353535@gmail.com
+    simple: gangulyprateek01@gmail.com
 - description: ""
   key: sender_mail_address
   playbookInputQuery:
@@ -32,7 +32,7 @@ inputs:
   required: false
   value:
     simple: "465"
-name: Armorblox_NeedsReview
+name: Armorblox Needs Review
 outputs:
 - contextPath: Armorblox.Threat.remediation_actions
   type: string
@@ -52,11 +52,11 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      id: 0a828c6a-22b7-4d63-8449-187f7ebb3036
+      id: c13b9f45-a269-4f5f-82d4-5337018ff132
       iscommand: false
       name: ""
       version: -1
-    taskid: 0a828c6a-22b7-4d63-8449-187f7ebb3036
+    taskid: c13b9f45-a269-4f5f-82d4-5337018ff132
     timertriggers: []
     type: start
     view: |-
@@ -84,13 +84,13 @@ tasks:
     task:
       brand: Armorblox
       description: 'Check the recommended remediation action for any incident '
-      id: a0f7d23d-bde9-4c0c-806f-7982fb19e51a
+      id: e4c88f5b-04c8-4d86-81b2-0641ba7f4fbb
       iscommand: true
       name: check-remediation-action
       script: Armorblox|||armorblox-check-remediation-action
       type: regular
       version: -1
-    taskid: a0f7d23d-bde9-4c0c-806f-7982fb19e51a
+    taskid: e4c88f5b-04c8-4d86-81b2-0641ba7f4fbb
     timertriggers: []
     type: regular
     view: |-
@@ -110,29 +110,29 @@ tasks:
     scriptarguments:
       incident_id:
         simple: ${incident.armorbloxincidentid}
-      recipient_mail_address:
-        simple: ${inputs.recipient_mail_address}
-      remediation_action:
-        simple: ${Armorblox.Threat.remediation_actions}
-      sender_mail_address:
-        simple: ${inputs.sender_mail_address}
-      sender_mail_password:
-        simple: ${inputs.sender_mail_password}
-      smtp_port:
-        simple: ${inputs.smtp_port}
-      smtp_server:
-        simple: ${inputs.smtp_server}
+        recipient_mail_address:
+          simple: ${inputs.recipient_mail_address}
+        remediation_action:
+          simple: ${Armorblox.Threat.remediation_actions}
+        sender_mail_address:
+          simple: ${inputs.sender_mail_address}
+        sender_mail_password:
+          simple: ${inputs.sender_mail_password}
+        smtp_port:
+          simple: ${inputs.smtp_port}
+        smtp_server:
+          simple: ${inputs.smtp_server}
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
-      id: aed8b432-8b8f-4f31-8cad-cb363036a24c
+      id: 12e58627-3bc4-437f-81df-79b78a0d6cb6
       iscommand: false
       name: ArmorBloxSendEmail
       script: 206e6b95-78af-4ee0-8ef3-ff6fda5268e3
       type: regular
       version: -1
-    taskid: aed8b432-8b8f-4f31-8cad-cb363036a24c
+    taskid: 12e58627-3bc4-437f-81df-79b78a0d6cb6
     timertriggers: []
     type: regular
     view: |-
@@ -169,12 +169,12 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      id: 8dadca68-a477-44e8-852f-fb4155325f70
+      id: 454d402c-45a4-4487-8731-108f6b18b377
       iscommand: false
       name: IfReviewNeeded
       type: condition
       version: -1
-    taskid: 8dadca68-a477-44e8-852f-fb4155325f70
+    taskid: 454d402c-45a4-4487-8731-108f6b18b377
     timertriggers: []
     type: condition
     view: |-
@@ -199,13 +199,13 @@ tasks:
     task:
       brand: ""
       description: Prints text to war room (Markdown supported)
-      id: 93aaf1ae-c0fb-439f-8914-e3e6bee484de
+      id: 3212c583-2a76-42c3-8cef-447ec14da87f
       iscommand: false
       name: Done
       script: Print
       type: regular
       version: -1
-    taskid: 93aaf1ae-c0fb-439f-8914-e3e6bee484de
+    taskid: 3212c583-2a76-42c3-8cef-447ec14da87f
     timertriggers: []
     type: regular
     view: |-
