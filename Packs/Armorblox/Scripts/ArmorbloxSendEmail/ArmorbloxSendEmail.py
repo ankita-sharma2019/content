@@ -15,7 +15,7 @@ import smtplib
 
 
 # TODO: REMOVE the following dummy function:
-def send_email(email: str, incident_id: str, remediation_action: str) -> str:
+def send_email(email: str, incident_id: str, remediation_action: str) -> Dict[str, str]:
     """Returns a string acknowledging the status of email sending procedure.
     :param email: email id of the recipient
     :param incident_id: The incident under the investigation, whose remediation action is being checked

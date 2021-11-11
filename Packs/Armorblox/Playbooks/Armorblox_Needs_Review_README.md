@@ -11,7 +11,7 @@ This playbook does not use any sub-playbooks.
 
 ### Scripts
 * Print
-* ArmorBloxSendEmail
+* ArmorbloxSendEmail
 
 ### Commands
 * armorblox-check-remediation-action

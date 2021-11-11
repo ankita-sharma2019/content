@@ -25,11 +25,11 @@ args:
   secret: true
 comment: Armorblox Send Email
 commonfields:
-  id: ArmorBloxSendEmail
+  id: ArmorbloxSendEmail
   version: -1
 dockerimage: demisto/python3:3.9.7.24076
 enabled: true
-name: ArmorBloxSendEmail
+name: ArmorbloxSendEmail
 runas: DBotWeakRole
 runonce: false
 script: ''
