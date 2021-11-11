@@ -110,18 +110,18 @@ tasks:
     scriptarguments:
       incident_id:
         simple: ${incident.armorbloxincidentid}
-        recipient_mail_address:
-          simple: ${inputs.recipient_mail_address}
-        remediation_action:
-          simple: ${Armorblox.Threat.remediation_actions}
-        sender_mail_address:
-          simple: ${inputs.sender_mail_address}
-        sender_mail_password:
-          simple: ${inputs.sender_mail_password}
-        smtp_port:
-          simple: ${inputs.smtp_port}
-        smtp_server:
-          simple: ${inputs.smtp_server}
+      recipient_mail_address:
+        simple: ${inputs.recipient_mail_address}
+      remediation_action:
+        simple: ${Armorblox.Threat.remediation_actions}
+      sender_mail_address:
+        simple: ${inputs.sender_mail_address}
+      sender_mail_password:
+        simple: ${inputs.sender_mail_password}
+      smtp_port:
+        simple: ${inputs.smtp_port}
+      smtp_server:
+        simple: ${inputs.smtp_server}
     separatecontext: false
     skipunavailable: false
     task:
@@ -129,7 +129,7 @@ tasks:
       id: 12e58627-3bc4-437f-81df-79b78a0d6cb6
       iscommand: false
       name: ArmorBloxSendEmail
-      script: 206e6b95-78af-4ee0-8ef3-ff6fda5268e3
+      script: ArmorBloxSendEmail
       type: regular
       version: -1
     taskid: 12e58627-3bc4-437f-81df-79b78a0d6cb6
