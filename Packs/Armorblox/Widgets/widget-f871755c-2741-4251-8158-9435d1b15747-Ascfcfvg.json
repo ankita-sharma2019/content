@@ -1,0 +1,36 @@
+{
+    "category": "",
+    "dataType": "incidents",
+    "dateRange": {
+        "fromDate": "0001-01-01T00:00:00Z",
+        "fromDateLicense": "0001-01-01T00:00:00Z",
+        "period": {
+            "by": "",
+            "byFrom": "days",
+            "byTo": "",
+            "field": "",
+            "fromValue": 7,
+            "toValue": null
+        },
+        "toDate": "0001-01-01T00:00:00Z"
+    },
+    "fromServerVersion": "",
+    "id": "f871755c-2741-4251-8158-9435d1b15747",
+    "isPredefined": false,
+    "itemVersion": "",
+    "name": "Ascfcfvg",
+    "packID": "",
+    "params": {
+        "groupBy": [
+            "type",
+            "armorbloxpolicynames"
+        ],
+        "valuesFormat": "abbreviated"
+    },
+    "query": "-status:closed -category:job and armorbloxpolicynames:\"body\"",
+    "size": 0,
+    "sort": null,
+    "toServerVersion": "",
+    "version": -1,
+    "widgetType": "column"
+}

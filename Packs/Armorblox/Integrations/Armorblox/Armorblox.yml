@@ -68,7 +68,7 @@ script:
     - description: The incident id of the incident under inspection
       name: incident_id
       required: true
-    description: 'Check the recommended remediation action for any incident '
+    description: Check the recommended remediation action for any incident
     name: armorblox-check-remediation-action
     outputs:
     - contextPath: Armorblox.Threat.remediation_actions
