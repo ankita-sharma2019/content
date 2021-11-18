@@ -2,39 +2,40 @@ description: This playbook sends email alerts to admins for Armorblox incidents 
   need review.
 id: Armorblox Needs Review
 inputs:
-- description: The receiver's mail list.
+- description: "Receiver's mailing address."
   key: recipient_mail_address
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: ankita353535@gmail.com
-- description: ""
+    simple: xyz@gmail.com
+- description: "Sender's mailing address"
   key: sender_mail_address
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: test.armorblox@gmail.com
-- description: ""
+    simple: test@gmail.com
+- description: "Sender's password"
   key: sender_mail_password
   playbookInputQuery:
-  required: false
+  required: true
   value:
-    simple: Armorb123@
-- description: ""
+    simple: ABCDEF@123
+- description: "The SMTP server for the sender's email"
   key: smtp_server
   playbookInputQuery:
-  required: false
+  required: true
   value:
     simple: smtp.gmail.com
-- description: ""
+- description: "SMTP server port."
   key: smtp_port
   playbookInputQuery:
-  required: false
+  required: true
   value:
     simple: "465"
 name: Armorblox Needs Review
 outputs:
 - contextPath: Armorblox.Threat.remediation_actions
+  description: Remediation Action for the incident under inspection.
   type: string
 starttaskid: "0"
 tasks:
@@ -52,11 +53,12 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      id: 75f9948a-4330-4c25-86eb-2b4263af8761
+      description: ''
+      id: c13b9f45-a269-4f5f-82d4-5337018ff132
       iscommand: false
       name: ""
       version: -1
-    taskid: 75f9948a-4330-4c25-86eb-2b4263af8761
+    taskid: c13b9f45-a269-4f5f-82d4-5337018ff132
     timertriggers: []
     type: start
     view: |-
@@ -84,13 +86,13 @@ tasks:
     task:
       brand: Armorblox
       description: 'Check the recommended remediation action for any incident '
-      id: 5f12ed4b-ee4f-449b-8824-18b7420cd8ad
+      id: e4c88f5b-04c8-4d86-81b2-0641ba7f4fbb
       iscommand: true
       name: check-remediation-action
       script: Armorblox|||armorblox-check-remediation-action
       type: regular
       version: -1
-    taskid: 5f12ed4b-ee4f-449b-8824-18b7420cd8ad
+    taskid: e4c88f5b-04c8-4d86-81b2-0641ba7f4fbb
     timertriggers: []
     type: regular
     view: |-
@@ -117,22 +119,23 @@ tasks:
       sender_mail_address:
         simple: ${inputs.sender_mail_address}
       sender_mail_password:
-        simple: '{TOMMED}+xgd3f7uym9vmpL4eVsZOO4Y+YQe+R20U8UVv34swc6Gmp8HKZ21Cysc+lTnMCxz1CFcJs0VwzNUoAeIOGNHEv+PsedHjGKSxuzhpDVXOtg='
+        simple: ${inputs.sender_mail_password}
       smtp_port:
-        simple: '{TOMMED}cG7TLTNTTLAgBYJCj27efEH0h8rbN8Cxq/+d5KKTaeHePpKLBlB28tcCrDrjGz+NgQsnWBlRkUVdlOq6ec3yHXAzYeyW3JzwlA2wygK9h+c='
+        simple: ${inputs.smtp_port}
       smtp_server:
-        simple: '{TOMMED}vB5BUHBCn2DNegv62Lcf/74VknvbB6pBKMTYCf8/SggpIetdQVpZMZ99mebPGo4pkjRap3hMIrCot9eYju6Fc7wlTw5fcUMbDTvC9y3aDVk='
+        simple: ${inputs.smtp_server}
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
-      id: 7aa73577-b448-4572-8999-67aa35810bd1
+      description: ''
+      id: ff04f871-c147-4206-82cf-1841adc25162
       iscommand: false
-      name: ArmorBloxSendEmail
-      script: ArmorBloxSendEmail
+      name: ArmorbloxSendEmail
+      script: ArmorbloxSendEmail
       type: regular
       version: -1
-    taskid: 7aa73577-b448-4572-8999-67aa35810bd1
+    taskid: ff04f871-c147-4206-82cf-1841adc25162
     timertriggers: []
     type: regular
     view: |-
@@ -169,12 +172,13 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      id: 2efe6b7e-49f4-45b9-843e-4799ab62789f
+      description: ''
+      id: 454d402c-45a4-4487-8731-108f6b18b377
       iscommand: false
       name: IfReviewNeeded
       type: condition
       version: -1
-    taskid: 2efe6b7e-49f4-45b9-843e-4799ab62789f
+    taskid: 454d402c-45a4-4487-8731-108f6b18b377
     timertriggers: []
     type: condition
     view: |-
@@ -199,13 +203,13 @@ tasks:
     task:
       brand: ""
       description: Prints text to war room (Markdown supported)
-      id: 936feb4c-4726-472c-87e3-4e6bc341d1d8
+      id: 3212c583-2a76-42c3-8cef-447ec14da87f
       iscommand: false
       name: Done
       script: Print
       type: regular
       version: -1
-    taskid: 936feb4c-4726-472c-87e3-4e6bc341d1d8
+    taskid: 3212c583-2a76-42c3-8cef-447ec14da87f
     timertriggers: []
     type: regular
     view: |-

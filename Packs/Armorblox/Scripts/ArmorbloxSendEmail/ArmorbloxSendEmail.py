@@ -2,8 +2,8 @@ import demistomock as demisto  # noqa: F401
 from CommonServerPython import *  # noqa: F401
 # import demistomock as demisto  # noqa: F401
 # from CommonServerPython import *  # noqa: F401
-"""This is a n automation script for sending an email whenever a particular incident is encountered.
-This incident is identified by it's remediation action. If the remediation action is ALERT or NEEDS REVIEW,an email
+"""This is an automation script for sending an email whenever a particular incident is encountered.
+This incident is identified by its remediation action. If the remediation action is ALERT or NEEDS REVIEW, an email
 is automatically sent to the desired admin email/group.
 """
 
@@ -25,8 +25,8 @@ def send_email(email: str, incident_id: str, remediation_action: str) -> str:
     if remediation_action:
         port = demisto.args().get('smtp_port')  # 465
         smtp_server = demisto.args().get('smtp_server')  # 'smtp.gmail.com'
-        sender_email = demisto.args().get('sender_mail_address')  # 'test.armorblox@gmail.com'
-        password = demisto.args().get('sender_mail_password')  # 'Armorb123@'
+        sender_email = demisto.args().get('sender_mail_address')
+        password = demisto.args().get('sender_mail_password')
         receiver_email = email
         subject = 'Remediation Action '
         body = f'The incident id: {incident_id} NEEDS REVIEW.'
