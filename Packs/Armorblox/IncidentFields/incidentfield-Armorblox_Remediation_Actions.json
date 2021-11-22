@@ -3,7 +3,6 @@
     "associatedTypes": [
         "Armorblox",
         "Armorblox Inbound Threat",
-        "Armorblox Abuse MailBox Report",
         "Armorblox Abuse Mailbox Report",
         "Armorblox Outbound Threat"
     ],
@@ -26,7 +25,7 @@
     "threshold": 72,
     "type": "longText",
     "unmapped": false,
-    "unsearchable": false,
+    "unsearchable": true,
     "useAsKpi": false,
     "version": -1,
     "fromVersion": "6.0.0"
