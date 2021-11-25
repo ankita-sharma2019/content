@@ -109,7 +109,7 @@
                 "Armorblox Abuse Mailbox"
             ],
             "to_address": [
-                "abuse@armorblox.dev"
+                "demo@armorblox.dev"
             ],
             "affected_user": "Admin",
             "folder_category": "SPAM",
@@ -178,7 +178,7 @@
                 "Armorblox Abuse Mailbox"
             ],
             "to_address": [
-                "abuse@armorblox.dev"
+                "demo@armorblox.dev"
             ],
             "affected_user": "Armorblox Abuse Mailbox",
             "folder_category": "UNCATEGORIZED",
