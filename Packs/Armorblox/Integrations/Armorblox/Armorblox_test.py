@@ -51,7 +51,7 @@ def mock_client(mocker, http_request_result=None, throw_error=False):
         mocker.patch.object(client, '_http_request', return_value=http_request_result)
 
     if throw_error:
-        err_msg = "Error in API call [400] - BAD REQUEST}"
+        err_msg = "Error in API call [400] - BAD REQUEST"
         mocker.patch.object(client, '_http_request', side_effect=DemistoException(err_msg, res={}))
 
     return client
@@ -95,7 +95,7 @@ def test_get_remediation_action(requests_mock):
         }
     )
     response = get_remediation_action(client, "3875")
-    assert response is None
+    assert response.outputs['remediation_actions'] == 'ALERT'
 
 
 def test_get_incidents_list(requests_mock):
